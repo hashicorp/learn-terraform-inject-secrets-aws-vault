@@ -1,6 +1,6 @@
 variable "aws_access_key" { }
 variable "aws_secret_key" { }
-variable "name"           { default = "dynamic-aws-creds-producer" }
+variable "name"           { default = "dynamic-aws-creds-operator" }
 
 terraform {
   backend "local" {
@@ -19,7 +19,7 @@ resource "vault_aws_secret_backend" "aws" {
   max_lease_ttl_seconds     = "240"
 }
 
-resource "vault_aws_secret_backend_role" "producer" {
+resource "vault_aws_secret_backend_role" "operator" {
   backend = vault_aws_secret_backend.aws.path
   name    = "${var.name}-role"
   credential_type = "iam_user"

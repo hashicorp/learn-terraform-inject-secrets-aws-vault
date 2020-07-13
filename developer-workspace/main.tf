@@ -1,6 +1,6 @@
-variable "name" { default = "dynamic-aws-creds-consumer" }
+variable "name" { default = "dynamic-aws-creds-developer" }
 variable "region" { default = "us-east-1" }
-variable "path" { default = "../producer-workspace/terraform.tfstate" }
+variable "path" { default = "../operator-workspace/terraform.tfstate" }
 variable "ttl" { default = "1" }
 
 terraform {
@@ -9,7 +9,7 @@ terraform {
   }
 }
 
-data "terraform_remote_state" "producer" {
+data "terraform_remote_state" "operator" {
   backend = "local"
 
   config = {
@@ -18,8 +18,8 @@ data "terraform_remote_state" "producer" {
 }
 
 data "vault_aws_access_credentials" "creds" {
-  backend = data.terraform_remote_state.producer.outputs.backend
-  role    = data.terraform_remote_state.producer.outputs.role
+  backend = data.terraform_remote_state.operator.outputs.backend
+  role    = data.terraform_remote_state.operator.outputs.role
 }
 
 provider "aws" {
