@@ -45,5 +45,5 @@ output "backend" {
 }
 
 output "role" {
-  value = vault_aws_secret_backend_role.producer.name
+  value = vault_aws_secret_backend_role.operator.name
 }
