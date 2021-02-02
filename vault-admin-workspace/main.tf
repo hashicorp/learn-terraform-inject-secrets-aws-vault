@@ -1,6 +1,6 @@
-variable "aws_access_key" { }
-variable "aws_secret_key" { }
-variable "name"           { default = "dynamic-aws-creds-vault-admin" }
+variable "aws_access_key" {}
+variable "aws_secret_key" {}
+variable "name" { default = "dynamic-aws-creds-vault-admin" }
 
 terraform {
   backend "local" {
@@ -20,8 +20,8 @@ resource "vault_aws_secret_backend" "aws" {
 }
 
 resource "vault_aws_secret_backend_role" "admin" {
-  backend = vault_aws_secret_backend.aws.path
-  name    = "${var.name}-role"
+  backend         = vault_aws_secret_backend.aws.path
+  name            = "${var.name}-role"
   credential_type = "iam_user"
 
   policy_document = <<EOF
