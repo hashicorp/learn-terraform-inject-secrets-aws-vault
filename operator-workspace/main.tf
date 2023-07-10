@@ -1,19 +1,17 @@
-variable "name" { default = "dynamic-aws-creds-operator" }
-variable "region" { default = "us-east-1" }
-variable "path" { default = "../vault-admin-workspace/terraform.tfstate" }
-variable "ttl" { default = "1" }
+provider "aws" {
+  region = var.region
 
-terraform {
-  backend "local" {
-    path = "terraform.tfstate"
-  }
+  access_key = data.vault_aws_access_credentials.creds.access_key
+  secret_key = data.vault_aws_access_credentials.creds.secret_key
 }
+
+provider "vault" {}
 
 data "terraform_remote_state" "admin" {
   backend = "local"
 
   config = {
-    path = var.path
+    path = var.vault_state_path
   }
 }
 
@@ -22,18 +20,12 @@ data "vault_aws_access_credentials" "creds" {
   role    = data.terraform_remote_state.admin.outputs.role
 }
 
-provider "aws" {
-  region     = var.region
-  access_key = data.vault_aws_access_credentials.creds.access_key
-  secret_key = data.vault_aws_access_credentials.creds.secret_key
-}
-
 data "aws_ami" "ubuntu" {
   most_recent = true
 
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-*"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
   }
 
   filter {
@@ -44,14 +36,13 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-# Create AWS EC2 Instance
 resource "aws_instance" "main" {
   ami           = data.aws_ami.ubuntu.id
-  instance_type = "t2.nano"
+  instance_type = "t2.micro"
 
   tags = {
-    Name  = var.name
+    Name  = "${var.project_name}-instance"
     TTL   = var.ttl
-    owner = "${var.name}-guide"
+    Owner = "${var.project_name}-guide"
   }
 }
