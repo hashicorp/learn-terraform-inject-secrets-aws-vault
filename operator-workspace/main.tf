@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 variable "name" { default = "dynamic-aws-creds-operator" }
 variable "region" { default = "us-east-1" }
 variable "path" { default = "../vault-admin-workspace/terraform.tfstate" }
