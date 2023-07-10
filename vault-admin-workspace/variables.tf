@@ -1,6 +1,10 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 variable "project_name" {
   type        = string
   description = "Name of this project."
+
   default     = "dynamic-aws-creds-vault"
 }
 
